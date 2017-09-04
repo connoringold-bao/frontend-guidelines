@@ -2,6 +2,111 @@
 
 ## HTML
 
+### Seperate layout from style
+Very rarely should classes be doing layout as well as style. In the example below we can insert any number of items in the `_Header`, `_Body` or `_Footer` below and the spacing between each of them will remain consistent. If we rely on the `_Title` to provide the spacing between that and the `nws-CardList` and a request has come in that the section needs to have `_Text` as well as the `_Title` we need to go and take the `margin-bottom` from the `_Title`, add it to the `_Text` as well as style the `_Text`. If we have it on the `_Header` originally we seperate the layout aspect from the style aspect.
+
+```html
+<!-- bad -->
+<div class="sec-Section">
+  <div class="sec-Section_Inner">
+    <h2 class="sec-Section_Title"></h2>
+    
+    <div class="nws-CardList"></div>
+    
+    <div class="sec-Section_Links">
+      <a class="sec-Section_Link sec-Section_Link-primary"></a>
+      <a class="sec-Section_Link sec-Section_Link-secondary"></a>
+    </div>
+  </div>
+</div>
+
+<!-- good -->
+<div class="sec-Section">
+  <div class="sec-Section_Inner">
+    <header class="sec-Section_Header">
+      <h2 class="sec-Section_Title"></h2>
+    </header>
+    
+    <div class="sec-Section_Body">
+      <div class="nws-CardList"></div>
+    </div>
+    
+    <footer class="sec-Section_Footer">
+      <div class="sec-Section_Links">
+        <a class="sec-Section_Link sec-Section_Link-primary"></a>
+        <a class="sec-Section_Link sec-Section_Link-secondary"></a>
+      </div>
+    </footer>
+  </div>
+</div>
+```
+
+This doesn't just apply to sections. Lists of cards are a great example of this. The `Good` example may seem overly verbose but each element plays and important role in seperating layout and style.
+
+The `nws-CardList` allows us to vertically space the list based on it's context.<br>
+The `nws-CardList_Items` acts as our `GridRow`<br>
+The `nws-CardList_Item` acts as our `GridColumn`<br>
+The `nws-Card` is the module we can use to style our cards
+
+```html
+<!-- bad -->
+<div class="nws-CardList">
+  <a class="nws-Card" href="#">
+    ...
+  </a>
+</div>
+
+<!-- good -->
+<div class="nws-CardList">
+  <ul class="nws-CardList_Items">
+    <li class="nws-CardList_Item">
+      <a class="nws-Card" href="#">
+        ...
+      </a>
+    </li>
+  </ul>
+</div>
+```
+
+## CSS
+
+### Shorthands
+Don't use shorthands for `margin` or `padding` unless you are at the start of the class. Even then only use the shorthand if you are going to be declaring all sizes.
+
+```css
+<!-- bad -->
+.cls-Class {
+  margin: 10px 0 0;
+}
+
+<!-- good -->
+.cls-Class {
+  margin-top: 10px;
+}
+
+
+<!-- bad -->
+.cls-Class {
+  margin-top: 10px;
+  
+  @media (--sm) {
+    margin: 10px 25px;
+  }
+}
+
+<!-- good -->
+.cls-Class {
+  margin-top: 10px;
+  
+  @media (--sm) {
+    margin-right: 25px;
+    margin-left: 25px;
+  }
+}
+```
+
+## HTML
+
 ### Semantics
 
 HTML5 provides us with lots of semantic elements aimed to describe precisely the content. Make sure you benefit from its rich vocabulary.
