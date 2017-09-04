@@ -10,9 +10,9 @@ Very rarely should classes be doing layout as well as style. In the example belo
 <div class="sec-Section">
   <div class="sec-Section_Inner">
     <h2 class="sec-Section_Title"></h2>
-    
+
     <div class="nws-CardList"></div>
-    
+
     <div class="sec-Section_Links">
       <a class="sec-Section_Link sec-Section_Link-primary"></a>
       <a class="sec-Section_Link sec-Section_Link-secondary"></a>
@@ -26,11 +26,11 @@ Very rarely should classes be doing layout as well as style. In the example belo
     <header class="sec-Section_Header">
       <h2 class="sec-Section_Title"></h2>
     </header>
-    
+
     <div class="sec-Section_Body">
       <div class="nws-CardList"></div>
     </div>
-    
+
     <footer class="sec-Section_Footer">
       <div class="sec-Section_Links">
         <a class="sec-Section_Link sec-Section_Link-primary"></a>
@@ -70,6 +70,108 @@ The `nws-Card` is the module we can use to style our cards
 
 ## CSS
 
+### Flex
+Flex is used for laying out items either vertical or horizontally. `display: block` also achieve the same vertical layout as `display: flex;` does. So on smaller breakpoints work out whether `flex` is necessary.
+
+We also don't want to make smaller browsers parse CSS code they don't have to.
+
+```css
+<!-- bad -->
+.crd-CardList_Items {
+  display: flex;
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.crd-CardList_Item {  
+  width: 100%;
+  margin-right: 10px;
+  margin-left: 10px;
+  
+  @media (--sm) {
+    width: calc((4 / 8 * 100%) - 20px);
+  }
+}
+
+<!-- good -->
+.crd-CardList_Items {
+  @media (--sm) {
+    display: flex;
+    margin-right: -10px;
+    margin-left: -10px;
+  }
+}
+
+.crd-CardList_Item {  
+  @media (--sm) {
+    width: calc((4 / 8 * 100%) - 20px);
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+}
+```
+
+### Fonts
+Most font sizing should be controlled through mixins. These ensures we have consistent responsive font-sizing when it comes to certain sizes.
+
+```css
+--Font-30: { font-size: 30px; letter-spacing: 0; line-height: 38px; };
+--Font-32: { font-size: 32px; letter-spacing: 0; line-height: 40px; };
+--Font-38: { font-size: 38px; letter-spacing: 0; line-height: 48px; };
+--Font-46: { font-size: 46px; letter-spacing: 0; line-height: 52px; };
+--Font-48: { font-size: 48px; letter-spacing: 0; line-height: 58px; };
+
+<!-- bad -->
+.cls-Class1 {
+  @apply --Font-30;
+  
+  @media (--sm) {
+    @apply --Font-32;
+  }
+  
+  @media (--md) {
+    @apply --Font-38;
+  }
+  
+  @media (--lg) {
+    @apply --Font-46;
+  }
+}
+
+.cls-Class2 {
+  @apply --Font-32;
+  
+  @media (--lg) {
+    @apply --Font-46;
+  }
+}
+
+<!-- good -->
+@mixin Font_46 {
+  @apply --Font-30;
+  
+  @media (--sm) {
+    @apply --Font-32;
+  }
+  
+  @media (--md) {
+    @apply --Font-38;
+  }
+  
+  @media (--lg) {
+    @apply --Font-46;
+  }
+}
+
+.cls-Class1 { @include Font_46; }
+.cls-Class2 { @include Font_46; }
+```
+
+Obviously there are exceptions to this rule but for most typographic elements on the site this is the preferred method.
+
+### Lists of items (horizontal)
+Horizontal list of items
+
 ### Shorthands
 Don't use shorthands for `margin` or `padding` unless you are at the start of the class. Even then only use the shorthand if you are going to be declaring all sizes.
 
@@ -88,7 +190,7 @@ Don't use shorthands for `margin` or `padding` unless you are at the start of th
 <!-- bad -->
 .cls-Class {
   margin-top: 10px;
-  
+
   @media (--sm) {
     margin: 10px 25px;
   }
@@ -97,13 +199,61 @@ Don't use shorthands for `margin` or `padding` unless you are at the start of th
 <!-- good -->
 .cls-Class {
   margin-top: 10px;
-  
+
   @media (--sm) {
     margin-right: 25px;
     margin-left: 25px;
   }
 }
 ```
+
+### Vertical spacing
+All vertical (bar very few occasions) should be done by `vr` (Vertical rhythm). Vertical rhythm is derived from the base `line-height`. For example if our base `font-size` is `16px` and the base `line-height` is `1.5` then `1vr` == `24px`.
+
+If you use random arbitrary numbers to match things like `31px` and `27px` then this defeats the purpose of `vr`. `vr` should be used to help with consistency.
+
+```css
+<!-- bad -->
+.cls-Class1 { margin-top: 0.2vr; }
+.cls-Class2 { margin-top: 0.45vr; }
+.cls-Class3 { margin-top: 0.32vr; }
+.cls-Class4 { margin-top: 0.8vr; }
+.cls-Class5 { margin-top: 1.9vr; }
+
+<!-- good -->
+.cls-Class1 { margin-top: 1.25vr; }
+.cls-Class2 { margin-top: 0.5vr; }
+.cls-Class3 { margin-top: 1vr; }
+.cls-Class4 { margin-top: 1.75vr; }
+.cls-Class5 { margin-top: 2vr; }
+```
+
+At the start of a project 3-4 baselines should be worked out and only they should be used throughout the project.
+
+A few good examples would be:
+
+| vr     | output |
+| ---    | ------ |
+| 0.25vr | 6px    |
+| 0.5vr  | 12px   |
+| 0.75vr | 18px   |
+| 1vr    | 24px   |
+
+Not so pretty, but these numbers could be made in to variables (`--Vr1: 0.23076; .cls { margin-top: var(--Vr1)vr; }`). We are aiming for consistency here over anything else so unfortunately we need to work this way sometimes.
+
+| vr        | output |
+| ---       | ------ |
+| 0.23076vr | 7px    |
+| 0.5vr     | 13px   |
+| 0.76923vr | 20px   |
+| 1vr       | 26px   |
+
+| vr     | output |
+| ---    | ------ |
+| 0.25vr | 7px    |
+| 0.5vr  | 14px   |
+| 0.75vr | 21px   |
+| 1vr    | 28px   |
 
 ## HTML
 
