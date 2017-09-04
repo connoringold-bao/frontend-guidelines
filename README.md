@@ -1,4 +1,6 @@
 # Frontend Guidelines
+This was initially forked from [here](https://github.com/bendc/frontend-guidelines). It was a good base to start with. I've removed rules i don't agree with and kept ones i do.
+
 
 ## HTML
 
@@ -67,195 +69,6 @@ The `nws-Card` is the module we can use to style our cards
   </ul>
 </div>
 ```
-
-## CSS
-
-### Flex
-Flex is used for laying out items either vertical or horizontally. `display: block` also achieve the same vertical layout as `display: flex;` does. So on smaller breakpoints work out whether `flex` is necessary.
-
-We also don't want to make smaller browsers parse CSS code they don't have to.
-
-```css
-<!-- bad -->
-.crd-CardList_Items {
-  display: flex;
-  margin-right: -10px;
-  margin-left: -10px;
-}
-
-.crd-CardList_Item {  
-  width: 100%;
-  margin-right: 10px;
-  margin-left: 10px;
-  
-  @media (--sm) {
-    width: calc((4 / 8 * 100%) - 20px);
-  }
-}
-
-<!-- good -->
-.crd-CardList_Items {
-  @media (--sm) {
-    display: flex;
-    margin-right: -10px;
-    margin-left: -10px;
-  }
-}
-
-.crd-CardList_Item {  
-  @media (--sm) {
-    width: calc((4 / 8 * 100%) - 20px);
-    margin-right: 10px;
-    margin-left: 10px;
-  }
-}
-```
-
-### Fonts
-Most font sizing should be controlled through mixins. These ensures we have consistent responsive font-sizing when it comes to certain sizes.
-
-```css
---Font-30: { font-size: 30px; letter-spacing: 0; line-height: 38px; };
---Font-32: { font-size: 32px; letter-spacing: 0; line-height: 40px; };
---Font-38: { font-size: 38px; letter-spacing: 0; line-height: 48px; };
---Font-46: { font-size: 46px; letter-spacing: 0; line-height: 52px; };
---Font-48: { font-size: 48px; letter-spacing: 0; line-height: 58px; };
-
-<!-- bad -->
-.cls-Class1 {
-  @apply --Font-30;
-  
-  @media (--sm) {
-    @apply --Font-32;
-  }
-  
-  @media (--md) {
-    @apply --Font-38;
-  }
-  
-  @media (--lg) {
-    @apply --Font-46;
-  }
-}
-
-.cls-Class2 {
-  @apply --Font-32;
-  
-  @media (--lg) {
-    @apply --Font-46;
-  }
-}
-
-<!-- good -->
-@mixin Font_46 {
-  @apply --Font-30;
-  
-  @media (--sm) {
-    @apply --Font-32;
-  }
-  
-  @media (--md) {
-    @apply --Font-38;
-  }
-  
-  @media (--lg) {
-    @apply --Font-46;
-  }
-}
-
-.cls-Class1 { @include Font_46; }
-.cls-Class2 { @include Font_46; }
-```
-
-Obviously there are exceptions to this rule but for most typographic elements on the site this is the preferred method.
-
-### Lists of items (horizontal)
-Horizontal list of items
-
-### Shorthands
-Don't use shorthands for `margin` or `padding` unless you are at the start of the class. Even then only use the shorthand if you are going to be declaring all sizes.
-
-```css
-<!-- bad -->
-.cls-Class {
-  margin: 10px 0 0;
-}
-
-<!-- good -->
-.cls-Class {
-  margin-top: 10px;
-}
-
-
-<!-- bad -->
-.cls-Class {
-  margin-top: 10px;
-
-  @media (--sm) {
-    margin: 10px 25px;
-  }
-}
-
-<!-- good -->
-.cls-Class {
-  margin-top: 10px;
-
-  @media (--sm) {
-    margin-right: 25px;
-    margin-left: 25px;
-  }
-}
-```
-
-### Vertical spacing
-All vertical (bar very few occasions) should be done by `vr` (Vertical rhythm). Vertical rhythm is derived from the base `line-height`. For example if our base `font-size` is `16px` and the base `line-height` is `1.5` then `1vr` == `24px`.
-
-If you use random arbitrary numbers to match things like `31px` and `27px` then this defeats the purpose of `vr`. `vr` should be used to help with consistency.
-
-```css
-<!-- bad -->
-.cls-Class1 { margin-top: 0.2vr; }
-.cls-Class2 { margin-top: 0.45vr; }
-.cls-Class3 { margin-top: 0.32vr; }
-.cls-Class4 { margin-top: 0.8vr; }
-.cls-Class5 { margin-top: 1.9vr; }
-
-<!-- good -->
-.cls-Class1 { margin-top: 1.25vr; }
-.cls-Class2 { margin-top: 0.5vr; }
-.cls-Class3 { margin-top: 1vr; }
-.cls-Class4 { margin-top: 1.75vr; }
-.cls-Class5 { margin-top: 2vr; }
-```
-
-At the start of a project 3-4 baselines should be worked out and only they should be used throughout the project.
-
-A few good examples would be:
-
-| vr     | output |
-| ---    | ------ |
-| 0.25vr | 6px    |
-| 0.5vr  | 12px   |
-| 0.75vr | 18px   |
-| 1vr    | 24px   |
-
-Not so pretty, but these numbers could be made in to variables (`--Vr1: 0.23076; .cls { margin-top: var(--Vr1)vr; }`). We are aiming for consistency here over anything else so unfortunately we need to work this way sometimes.
-
-| vr        | output |
-| ---       | ------ |
-| 0.23076vr | 7px    |
-| 0.5vr     | 13px   |
-| 0.76923vr | 20px   |
-| 1vr       | 26px   |
-
-| vr     | output |
-| ---    | ------ |
-| 0.25vr | 7px    |
-| 0.5vr  | 14px   |
-| 0.75vr | 21px   |
-| 1vr    | 28px   |
-
-## HTML
 
 ### Semantics
 
@@ -404,41 +217,192 @@ important factor.
 
 ## CSS
 
-### Semicolons
+### Flex
+Flex is used for laying out items either vertical or horizontally. `display: block` also achieve the same vertical layout as `display: flex;` does. So on smaller breakpoints work out whether `flex` is necessary.
 
-While the semicolon is technically a separator in CSS, always treat it as a terminator.
-
-```css
-/* bad */
-div {
-  color: red
-}
-
-/* good */
-div {
-  color: red;
-}
-```
-
-### Box model
-
-The box model should ideally be the same for the entire document. A global
-`* { box-sizing: border-box; }` is fine, but don't change the default box model
-on specific elements if you can avoid it.
+We also don't want to make smaller browsers parse CSS code they don't have to.
 
 ```css
 /* bad */
-div {
+.crd-CardList_Items {
+  display: flex;
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.crd-CardList_Item {  
   width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
+  margin-right: 10px;
+  margin-left: 10px;
+  
+  @media (--sm) {
+    width: calc((4 / 8 * 100%) - 20px);
+  }
 }
 
 /* good */
-div {
-  padding: 10px;
+.crd-CardList_Items {
+  @media (--sm) {
+    display: flex;
+    margin-right: -10px;
+    margin-left: -10px;
+  }
+}
+
+.crd-CardList_Item {  
+  @media (--sm) {
+    width: calc((4 / 8 * 100%) - 20px);
+    margin-right: 10px;
+    margin-left: 10px;
+  }
 }
 ```
+
+### Fonts
+Most font sizing should be controlled through mixins. These ensures we have consistent responsive font-sizing when it comes to certain sizes.
+
+```css
+--Font-30: { font-size: 30px; letter-spacing: 0; line-height: 38px; };
+--Font-32: { font-size: 32px; letter-spacing: 0; line-height: 40px; };
+--Font-38: { font-size: 38px; letter-spacing: 0; line-height: 48px; };
+--Font-46: { font-size: 46px; letter-spacing: 0; line-height: 52px; };
+--Font-48: { font-size: 48px; letter-spacing: 0; line-height: 58px; };
+
+/* bad */
+.cls-Class1 {
+  @apply --Font-30;
+  
+  @media (--sm) {
+    @apply --Font-32;
+  }
+  
+  @media (--md) {
+    @apply --Font-38;
+  }
+  
+  @media (--lg) {
+    @apply --Font-46;
+  }
+}
+
+.cls-Class2 {
+  @apply --Font-32;
+  
+  @media (--lg) {
+    @apply --Font-46;
+  }
+}
+
+/* good */
+@mixin Font_46 {
+  @apply --Font-30;
+  
+  @media (--sm) {
+    @apply --Font-32;
+  }
+  
+  @media (--md) {
+    @apply --Font-38;
+  }
+  
+  @media (--lg) {
+    @apply --Font-46;
+  }
+}
+
+.cls-Class1 { @include Font_46; }
+.cls-Class2 { @include Font_46; }
+```
+
+Obviously there are exceptions to this rule but for most typographic elements on the site this is the preferred method.
+
+### Lists of items (horizontal)
+Horizontal list of items
+
+### Shorthands
+Don't use shorthands for `margin` or `padding` unless you are at the start of the class. Even then only use the shorthand if you are going to be declaring all sizes.
+
+```css
+/* bad */
+.cls-Class {
+  margin: 10px 0 0;
+}
+
+/* good */
+.cls-Class {
+  margin-top: 10px;
+}
+
+
+/* bad */
+.cls-Class {
+  margin-top: 10px;
+
+  @media (--sm) {
+    margin: 10px 25px;
+  }
+}
+
+/* good */
+.cls-Class {
+  margin-top: 10px;
+
+  @media (--sm) {
+    margin-right: 25px;
+    margin-left: 25px;
+  }
+}
+```
+
+### Vertical spacing
+All vertical (bar very few occasions) should be done by `vr` (Vertical rhythm). Vertical rhythm is derived from the base `line-height`. For example if our base `font-size` is `16px` and the base `line-height` is `1.5` then `1vr` == `24px`.
+
+If you use random arbitrary numbers to match things like `31px` and `27px` then this defeats the purpose of `vr`. `vr` should be used to help with consistency.
+
+```css
+/* bad */
+.cls-Class1 { margin-top: 0.2vr; }
+.cls-Class2 { margin-top: 0.45vr; }
+.cls-Class3 { margin-top: 0.32vr; }
+.cls-Class4 { margin-top: 0.8vr; }
+.cls-Class5 { margin-top: 1.9vr; }
+
+/* good */
+.cls-Class1 { margin-top: 1.25vr; }
+.cls-Class2 { margin-top: 0.5vr; }
+.cls-Class3 { margin-top: 1vr; }
+.cls-Class4 { margin-top: 1.75vr; }
+.cls-Class5 { margin-top: 2vr; }
+```
+
+At the start of a project 3-4 baselines should be worked out and only they should be used throughout the project.
+
+A few good examples would be:
+
+| vr     | output |
+| ---    | ------ |
+| 0.25vr | 6px    |
+| 0.5vr  | 12px   |
+| 0.75vr | 18px   |
+| 1vr    | 24px   |
+
+Not so pretty, but these numbers could be made in to variables (`--Vr1: 0.23076; .cls { margin-top: var(--Vr1)vr; }`). We are aiming for consistency here over anything else so unfortunately we need to work this way sometimes.
+
+| vr        | output |
+| ---       | ------ |
+| 0.23076vr | 7px    |
+| 0.5vr     | 13px   |
+| 0.76923vr | 20px   |
+| 1vr       | 26px   |
+
+| vr     | output |
+| ---    | ------ |
+| 0.25vr | 7px    |
+| 0.5vr  | 14px   |
+| 0.75vr | 21px   |
+| 1vr    | 28px   |
+
+## CSS
 
 ### Flow
 
@@ -475,144 +439,37 @@ div {
 }
 ```
 
-### Positioning
-
-There are many ways to position elements in CSS but try to restrict yourself to the
-properties/values below. By order of preference:
-
-```
-display: block;
-display: flex;
-position: relative;
-position: sticky;
-position: absolute;
-position: fixed;
-```
-
-### Selectors
-
-Minimize selectors tightly coupled to the DOM. Consider adding a class to the elements
-you want to match when your selector exceeds 3 structural pseudo-classes, descendant or
-sibling combinators.
-
-```css
-/* bad */
-div:first-of-type :last-child > p ~ *
-
-/* good */
-div:first-of-type .info
-```
-
-Avoid overloading your selectors when you don't need to.
-
-```css
-/* bad */
-img[src$=svg], ul > li:first-child {
-  opacity: 0;
-}
-
-/* good */
-[src$=svg], ul > :first-child {
-  opacity: 0;
-}
-```
-
-### Specificity
-
-Don't make values and selectors hard to override. Minimize the use of `id`'s
-and avoid `!important`.
-
-```css
-/* bad */
-.bar {
-  color: green !important;
-}
-.foo {
-  color: red;
-}
-
-/* good */
-.foo.bar {
-  color: green;
-}
-.foo {
-  color: red;
-}
-```
-
-### Overriding
-
-Overriding styles makes selectors and debugging harder. Avoid it when possible.
-
-```css
-/* bad */
-li {
-  visibility: hidden;
-}
-li:first-child {
-  visibility: visible;
-}
-
-/* good */
-li + li {
-  visibility: hidden;
-}
-```
-
 ### Inheritance
 
 Don't duplicate style declarations that can be inherited.
 
 ```css
 /* bad */
-div h1, div p {
-  text-shadow: 0 1px 0 #fff;
+.nws-Card_Body {
+  ...
+}
+
+.nws-Card_Title {
+  color: #fff;
+  ...
+}
+
+.nws-Card_Text {
+  color: #fff;
+  ...
 }
 
 /* good */
-div {
-  text-shadow: 0 1px 0 #fff;
-}
-```
-
-### Brevity
-
-Keep your code terse. Use shorthand properties and avoid using multiple properties when
-it's not needed.
-
-```css
-/* bad */
-div {
-  transition: all 1s;
-  top: 50%;
-  margin-top: -10px;
-  padding-top: 5px;
-  padding-right: 10px;
-  padding-bottom: 20px;
-  padding-left: 10px;
+.nws-Card_Body {
+  color: #fff;
 }
 
-/* good */
-div {
-  transition: 1s;
-  top: calc(50% - 10px);
-  padding: 5px 10px 20px;
-}
-```
-
-### Language
-
-Prefer English over math.
-
-```css
-/* bad */
-:nth-child(2n + 1) {
-  transform: rotate(360deg);
+.nws-Card_Title {
+  ...
 }
 
-/* good */
-:nth-child(odd) {
-  transform: rotate(1turn);
+.nws-Card_Text {
+  ...
 }
 ```
 
@@ -665,29 +522,6 @@ div:hover {
 }
 ```
 
-### Units
-
-Use unitless values when you can. Favor `rem` if you use relative units. Prefer seconds over
-milliseconds.
-
-```css
-/* bad */
-div {
-  margin: 0px;
-  font-size: .9em;
-  line-height: 22px;
-  transition: 500ms;
-}
-
-/* good */
-div {
-  margin: 0;
-  font-size: .9rem;
-  line-height: 1.5;
-  transition: .5s;
-}
-```
-
 ### Colors
 
 If you need transparency, use `rgba`. Otherwise, always use the hexadecimal format.
@@ -722,24 +556,6 @@ div::before {
   height: 20px;
   border-radius: 50%;
   background: #fff;
-}
-```
-
-### Hacks
-
-Don't use them.
-
-```css
-/* bad */
-div {
-  // position: relative;
-  transform: translateZ(0);
-}
-
-/* good */
-div {
-  /* position: relative; */
-  will-change: transform;
 }
 ```
 
@@ -813,7 +629,7 @@ if (x == undefined) { ... }
 
 ### Loops
 
-Don't use loops as they force you to use mutable objects. Rely on `array.prototype` methods.
+Don't use loops as they force you to use mutable objects. Rely on `array.prototype` or `lodash` methods.
 
 ```javascript
 // bad
@@ -829,6 +645,9 @@ const sum = arr => {
 sum([1, 2, 3]); // => 6
 
 // good
+import { sum } from 'lodash'
+
+// or
 const sum = arr =>
   arr.reduce((x, y) => x + y);
 
@@ -860,8 +679,6 @@ const createDivs = howMany => {
 };
 createDivs(5);
 ```
-
-Here's a [generic loop function](https://gist.github.com/bendc/6cb2db4a44ec30208e86) making recursion easier to use.
 
 ### Arguments
 
@@ -1038,32 +855,6 @@ for (var prop in obj) {
 
 // good
 Object.keys(obj).forEach(prop => console.log(prop));
-```
-
-### Objects as Maps
-
-While objects have legitimate use cases, maps are usually a better, more powerful choice. When in
-doubt, use a `Map`.
-
-```javascript
-// bad
-const me = {
-  name: "Ben",
-  age: 30
-};
-var meSize = Object.keys(me).length;
-meSize; // => 2
-me.country = "Belgium";
-meSize++;
-meSize; // => 3
-
-// good
-const me = new Map();
-me.set("name", "Ben");
-me.set("age", 30);
-me.size; // => 2
-me.set("country", "Belgium");
-me.size; // => 3
 ```
 
 ### Curry
