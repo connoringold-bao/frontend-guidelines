@@ -317,7 +317,96 @@ Most font sizing should be controlled through mixins. These ensures we have cons
 Obviously there are exceptions to this rule but for most typographic elements on the site this is the preferred method.
 
 ### Lists of items (horizontal)
-Horizontal list of items
+Horizontal list of items should have their vertical spacing done by margin-top if using `display: flex;` (If using `display: grid;` this point is negated as you have `grid-gap`).
+
+The reason we use `margin-top` instead of `margin-bottom` is we can guarentee how many cards will be at the start but not at the end.
+
+```css
+/* bad */
+.lst-Cards_Items {
+  flex-direction: column;
+
+  display: flex;
+  
+  @media (--sm) {
+    flex-direction: row;
+    
+    width: calc(4 / 8 * 100%);
+  }
+}
+
+.lst-Cards_Item {
+  margin-bottom: 30px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* good */
+.lst-Cards_Items {
+  @media (--sm) {
+    display: flex;
+  }
+}
+
+.lst-Cards_Item {
+  margin-top: 30px;
+  
+  @media (--sm) {
+    width: calc(4 / 8 * 100%);
+  }
+  
+  &:first-child {
+    margin-top: 0;
+  }
+  
+  &:nth-child(-n+2) {
+    @media (--sm) {
+      margin-top: 0;
+    }
+  }
+}
+```
+
+In the bad example if we had 2 rows of 2 columns of cards only the last item will have a `margin-bottom` of `0` meaning the 2nd to last item will have `margin-bottom: 30px` meaning that we get 30px spacing at the bottom where we might not want it.
+
+You also can't do `&:nth-last-child(-n+2)` because if we have some instances of 2 rows with just 1 card in the 2nd row then this means the 2nd item on the 1st row now has no `margin-bottom`.
+
+It could be argued that you could just do a negative margin on `.lst-Cards_Items`. This is a perfectly acceptable solution when you don't know how many cards you will have per row (no `width: {x}` is set on the `.lst-Card_Item`'s). There is a drawback to this though. When you have a negative margin on the `.lst-Cards_Items` you can't have a `margin-top` that would space it from the element that comes before and in some circumstances it might no be ideal to have `margin-bottom` on the element that comes before the list of cards.
+
+### Mixins
+Mixins should not you parenthesis `()`. Mixins should be used to help keep code consistent. They allow you to encapsulate more than just a single item as a variable. If they start accepting arguments they become code generators and start masking how output code is done.
+
+```css
+/* bad */
+@mixin Grid_Row($margin, $shouldWrap) {
+  @if $shouldWrap {
+    flex-wrap: wrap;
+  }
+
+  display: flex;
+  margin-right: $margin;
+  margin-left: $margin;
+}
+
+.cls-Class {
+  @include Grid_Row(-15px, true)
+}
+
+/* good */
+@mixin Grid_Row {
+  display: flex;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.cls-Class {
+  @include Grid_Row;
+  
+  flex-wrap: wrap;
+}
+```
 
 ### Shorthands
 Don't use shorthands for `margin` or `padding` unless you are at the start of the class. Even then only use the shorthand if you are going to be declaring all sizes.
