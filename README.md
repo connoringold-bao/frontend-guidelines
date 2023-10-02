@@ -148,9 +148,9 @@ Keep your code terse. Forget about your old XHTML habits.
 <!-- good -->
 <!doctype html>
 <html lang=en>
-	<head>
-	  <meta charset=utf-8>
- 	  <title>Contact</title>
+  <head>
+    <meta charset=utf-8>
+    <title>Contact</title>
     <link rel=stylesheet href=style.css>
   </head>
 
